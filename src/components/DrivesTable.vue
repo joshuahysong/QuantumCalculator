@@ -1,25 +1,10 @@
 <template>
     <div id='drives-table'>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Size</th>
-                    <th>Speed (m/s)</th>
-                    <th>Acceleration (m/s)</th>
-                    <th>Travel Time (Minutes)</th>                        
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="drive in drives" :key="drive.id">
-                    <td>{{ drive.name }}</td>
-                    <td>{{ drive.size }}</td>
-                    <td>{{ drive.speed.toLocaleString('en') }}</td>
-                    <td>{{ drive.acceleration.toLocaleString('en') }}</td>
-                    <td>{{ calculateTravelTime(drive.speed, drive.acceleration) }}</td>
-                </tr>
-            </tbody>
-        </table>
+        <b-table striped hover :items="drives" :fields="fields" >
+            <!-- <template v-slot:cell(time)="data">
+                {{  }}
+            </template> -->
+        </b-table>
     </div>
 </template>
 
@@ -31,6 +16,37 @@ export default {
     },
     data() {
         return {
+            fields: [
+                {
+                    key: 'name',
+                    sortable: true
+                },                
+                {
+                    key: 'size',
+                    sortable: true
+                },                
+                {
+                    key: 'speed',
+                    label: 'Speed (m/s)',
+                    sortable: true
+                },               
+                {
+                    key: 'acceleration',
+                    label: 'Acceleration (m/s)',
+                    sortable: true
+                },
+                {
+                    key: 'time',
+                    label: 'Travel Time (Minutes)',
+                    formatter: (value, key, item) => {
+                        if (!value && key === 'time') {
+                            return new Date(this.calculateTravelTime(item.speed, item.acceleration) * 1000).toISOString().substr(14, 5)
+                        }
+                    },
+                    sortable: true,
+                    sortByFormatted: true,
+                }
+            ],
             drives: [
                 {
                     "size": 1,
@@ -386,7 +402,17 @@ export default {
             } else {
                 travelTime = speed / acceleration + this.distance / speed;
             }
-            return new Date(travelTime * 1000).toISOString().substr(14, 5);
+            return travelTime;
+        },
+        mySortCompare(a, b, key) {
+            if (key === 'time') {
+                // Assuming the date field is a `Date` object, subtraction
+                // works on the date serial number (epoch value)
+                return a[key] - b[key]
+            } else {
+                // Let b-table handle sorting other fields (other than `date` field)
+                return false
+            }
         }
     }
 }
