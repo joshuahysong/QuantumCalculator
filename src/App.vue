@@ -18,7 +18,7 @@ export default {
     },
     data() {
         return {
-            distance: 0
+            distance: 42287791000 // distance from Olisar to ArcCorp
         }
     },
     methods: {

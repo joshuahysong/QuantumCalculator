@@ -5,17 +5,17 @@
                 <tr>
                     <th>Name</th>
                     <th>Size</th>
-                    <th>Speed</th>
-                    <th>Acceleration</th>
-                    <th>Travel Time</th>                        
+                    <th>Speed (m/s)</th>
+                    <th>Acceleration (m/s)</th>
+                    <th>Travel Time (Minutes)</th>                        
                 </tr>
             </thead>
             <tbody>
                 <tr v-for="drive in drives" :key="drive.id">
                     <td>{{ drive.name }}</td>
                     <td>{{ drive.size }}</td>
-                    <td>{{ drive.speed }}</td>
-                    <td>{{ drive.acceleration }}</td>
+                    <td>{{ drive.speed.toLocaleString('en') }}</td>
+                    <td>{{ drive.acceleration.toLocaleString('en') }}</td>
                     <td>{{ calculateTravelTime(drive.speed, drive.acceleration) }}</td>
                 </tr>
             </tbody>
