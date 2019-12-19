@@ -1,6 +1,6 @@
 <template>
     <div id='drives-table'>
-        <b-table striped hover :items="filteredDrives" :fields="fields" ></b-table>
+        <b-table striped hover :items="filteredDrives" :fields="fields" responsive="md"></b-table>
     </div>
 </template>
 
@@ -17,10 +17,26 @@ export default {
             fields: [
                 {
                     key: 'localname',
+                    label: 'Name',
                     sortable: true
-                },                
+                },
                 {
                     key: 'size',
+                    sortable: true
+                },
+                {
+                    key: 'class',
+                    formatter: (value, key, item) => {
+                        if (value && key === 'class') {
+                            return this.$parent.getVerboseClass(item.class);
+                        }
+                    },
+                    sortable: true,
+                    sortByFormatted: true,
+                },
+                {
+                    key: 'qdFuelrequirementqdFuel',
+                    label: 'Fuel Usage',
                     sortable: true
                 },                
                 {
@@ -68,8 +84,14 @@ export default {
         filteredDrives() {
             var filteredData = this.drives;
             if (this.filter && Object.entries(this.filter).length > 0) {   
-                if (this.filter.size.length > 0) {
-                    filteredData = filteredData.filter((drive) => this.filter.size.includes(drive.size));
+                if (this.filter.names.length > 0) {
+                    filteredData = filteredData.filter((drive) => this.filter.names.includes(drive.localname));
+                }
+                if (this.filter.sizes.length > 0) {
+                    filteredData = filteredData.filter((drive) => this.filter.sizes.includes(drive.size));
+                }
+                if (this.filter.classes.length > 0) {
+                    filteredData = filteredData.filter((drive) => this.filter.classes.map(c => c.key).includes(drive.class));
                 }
             }
             return filteredData;

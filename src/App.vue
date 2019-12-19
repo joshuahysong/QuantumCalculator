@@ -29,10 +29,25 @@ export default {
     },
     methods: {
         calculateTravel(distance) {
-            this.distance = distance * 1000;
+            // kilometers to meters
+            this.distance = distance * 1000; 
         },
         filterDrives(filter) {
             this.filter = filter;
+        },
+        getVerboseClass(driveClass) {
+            switch(driveClass) {
+                case 'ind':
+                    return 'Industrial';
+                case 'mil':
+                    return 'Military';
+                case 'civ':
+                    return 'Civilian';
+                case 'stl':
+                    return 'Stealth';
+                default:
+                    return driveClass;
+            }
         }
     }
 }

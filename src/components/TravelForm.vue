@@ -25,9 +25,34 @@
             </div>
             <div class='card-body'>
                 <div class="row mb-3">
-                    <div class="col">
+                    <div class="col-12 col-lg mb-3 mb-lg-0">
+                        <label>Name</label>
+                        <multiselect v-model="filter.names" 
+                            :options="driveNameOptions" 
+                            :multiple="true"
+                            :close-on-select="false"
+                            :limit="1"
+                            placeholder="Select a drive name"></multiselect>
+                    </div>
+                    <div class="col-12 col-md-6 col-lg mb-3 mb-md-0">
                         <label>Size</label>
-                        <multiselect v-model="filter.size" :options="filterOptions.size" :multiple="true" :close-on-select="false" placeholder="Select a drive size"></multiselect>
+                        <multiselect v-model="filter.sizes" 
+                            :options="driveSizeOptions" 
+                            :multiple="true" 
+                            :searchable="false"
+                            :close-on-select="false"
+                            placeholder="Select a drive size"></multiselect>
+                    </div>
+                    <div class="col-12 col-md-6 col-lg">
+                        <label>Class</label>
+                        <multiselect v-model="filter.classes" 
+                            :options="driveClassOptions" 
+                            :multiple="true" 
+                            :searchable="false"
+                            :close-on-select="false"
+                            track-by="key"
+                            label="label"
+                            placeholder="Select a drive class"></multiselect>
                     </div>
                 </div>
             </div>
@@ -36,6 +61,7 @@
 </template>
 
 <script>
+import drivesjson from '../../content/drives.json'
 import Multiselect from 'vue-multiselect'
 export default {
     name: "travel-form",
@@ -44,13 +70,13 @@ export default {
     },
     data() {
         return {
+            drives: drivesjson,
             fromLocation: 'Custom',
             toLocation: 'Custom',
             filter: {
-                size: []
-            },
-            filterOptions: {
-                size: [1, 2, 3, 4]
+                names: [],
+                sizes: [],
+                classes: []
             },
             travel: {
                 locations: ['Custom'],
@@ -64,6 +90,24 @@ export default {
     methods: {
         handleSearchSubmit() {
             this.$emit('travel:search', this.travel.distance);
+        },
+        getDistinct(value, index, self) {
+            return self.indexOf(value) === index;
+        }
+    },
+    computed: {
+        driveNameOptions() {
+            return this.drives.map(drive => drive.localname).filter(this.getDistinct);
+        },
+        driveSizeOptions() {
+            return this.drives.map(drive => drive.size).filter(this.getDistinct);
+        },
+        driveClassOptions() {
+            return this.drives
+                .filter((drive) => drive.class)
+                .map(drive => drive.class)
+                .filter(this.getDistinct)
+                .map(c => { return { "key": c, "label": this.$parent.getVerboseClass(c) } });
         }
     },
     watch: {
