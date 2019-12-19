@@ -10,7 +10,8 @@
   "dependencies": {
     "bootstrap-vue": "^2.0.4",
     "core-js": "^3.4.3",
-    "vue": "^2.6.10"
+    "vue": "^2.6.10",
+    "vue-multiselect": "^2.1.6"
   },
   "devDependencies": {
     "@babel/polyfill": "^7.6.0",
