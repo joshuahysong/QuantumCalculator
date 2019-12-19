@@ -11,7 +11,7 @@
                     <multiselect v-model="toLocation" :options="travel.locations" :searchable="false" :close-on-select="true" placeholder="Pick a starting location"></multiselect>
                 </div>
                 <div class="col-12 col-lg mb-3 mb-lg-0">
-                    <label>Distance</label>
+                    <label>Distance (Km)</label>
                     <input v-model="travel.distance" type="number" class="form-control" :disabled="toLocation !== 'Custom'" />
                 </div>
                 <div class="col-12 col-lg-auto align-self-end text-left text-lg-right">
@@ -71,17 +71,24 @@ export default {
     data() {
         return {
             drives: drivesjson,
-            fromLocation: 'Custom',
-            toLocation: 'Custom',
+            fromLocation: 'Port Olisar',
+            toLocation: 'ArcCorp',
             filter: {
                 names: [],
                 sizes: [],
                 classes: []
             },
             travel: {
-                locations: ['Custom'],
+                locations: ['Custom', 'ArcCorp', 'Port Olisar' ],
                 distance: 42287791
-            }
+            },
+            distances: [
+                { 
+                    from: 'Port Olisar',
+                    to: 'ArcCorp',
+                    kilometers: 42287791
+                }
+            ]
         }
     },
     created() {
@@ -93,6 +100,17 @@ export default {
         },
         getDistinct(value, index, self) {
             return self.indexOf(value) === index;
+        },
+        getDistance(from, to) {
+            if (from && to && from !== 'Custom' && to !== 'Custom') {
+                var matchedDistances = this.distances
+                    .filter(distance => (distance.from === from && distance.to === to)
+                        ||  (distance.from === to && distance.to === from))
+                if (matchedDistances.length > 0) {
+                    return matchedDistances[0].kilometers;
+                }
+                return 0;
+            }
         }
     },
     computed: {
@@ -115,10 +133,15 @@ export default {
             if (newValue === 'Custom' && this.toLocation !== 'Custom') {
                 this.toLocation = 'Custom';
             }
+            else {
+                this.travel.distance = this.getDistance(this.toLocation, newValue);
+            }
         },
         toLocation: function(newValue) {
             if (newValue === 'Custom' && this.fromLocation !== 'Custom') {
                 this.fromLocation = 'Custom';
+            } else {
+                this.travel.distance = this.getDistance(newValue, this.fromLocation);
             }
         }
     }
