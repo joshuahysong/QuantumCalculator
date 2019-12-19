@@ -1,6 +1,6 @@
 <template>
     <div id='drives-table'>
-        <b-table striped hover :items="drives" :fields="fields" ></b-table>
+        <b-table striped hover :items="filteredDrives" :fields="fields" ></b-table>
     </div>
 </template>
 
@@ -9,7 +9,8 @@ import drivesjson from '../../content/drives.json'
 export default {
     name: 'drives-table',
     props: {
-        distance: Number
+        distance: Number,
+        filter: {}
     },
     data() {
         return {
@@ -47,6 +48,10 @@ export default {
             drives: drivesjson
         }
     },
+    created() {
+        // Sort by Size then by Localname both ascending
+        this.drives = this.drives.sort((a,b) => a.size > b.size ? 1 : (a.size === b.size) ? ((a.localname > b.localname) ? 1 : -1) : -1);
+    },
     methods: {
         calculateTravelTime(speed, acceleration) {
             var accelerationDistance = Math.pow(speed, 2) / (2 * acceleration);
@@ -57,16 +62,17 @@ export default {
                 travelTime = speed / acceleration + this.distance / speed;
             }
             return travelTime;
-        },
-        mySortCompare(a, b, key) {
-            if (key === 'time') {
-                // Assuming the date field is a `Date` object, subtraction
-                // works on the date serial number (epoch value)
-                return a[key] - b[key]
-            } else {
-                // Let b-table handle sorting other fields (other than `date` field)
-                return false
+        }
+    },
+    computed: {
+        filteredDrives() {
+            var filteredData = this.drives;
+            if (this.filter && Object.entries(this.filter).length > 0) {   
+                if (this.filter.size.length > 0) {
+                    filteredData = filteredData.filter((drive) => this.filter.size.includes(drive.size));
+                }
             }
+            return filteredData;
         }
     }
 }
