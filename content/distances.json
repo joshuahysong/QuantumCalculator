@@ -1,0 +1,27 @@
+[
+    { 
+        "from": "Port Olisar",
+        "to": "ArcCorp",
+        "kilometers": 42287791
+    },
+    {
+        "from": "Port Olisar",
+        "to": "ARC-L5",
+        "kilometers": 26140000
+    },
+    {
+        "from": "ARC-L5",
+        "to": "Microtech",
+        "kilometers": 72033000
+    },
+    {
+        "from": "Port Olisar",
+        "to": "Microtech",
+        "kilometers": 57478000
+    },
+    {
+        "from": "Port Olisar",
+        "to": "HUR-L4",
+        "kilometers": 28885000
+    }
+]

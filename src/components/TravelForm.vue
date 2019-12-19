@@ -4,15 +4,15 @@
             <div class="row no-gutters-md mb-3">
                 <div class="col-12 col-md-6 col-lg-4 mb-3 mb-lg-0">
                     <label>From</label>
-                    <multiselect v-model="fromLocation" :options="travel.locations" :searchable="false" :close-on-select="true" placeholder="Pick a starting location"></multiselect>
+                    <multiselect v-model="fromLocation" :options="travelOptions" :searchable="false" :close-on-select="true" placeholder="Pick a starting location"></multiselect>
                 </div>
                 <div class="col-12 col-md-6 col-lg-4 mb-3 mb-lg-0">
                     <label>To</label>
-                    <multiselect v-model="toLocation" :options="travel.locations" :searchable="false" :close-on-select="true" placeholder="Pick a starting location"></multiselect>
+                    <multiselect v-model="toLocation" :options="travelOptions" :searchable="false" :close-on-select="true" placeholder="Pick a starting location"></multiselect>
                 </div>
                 <div class="col-12 col-lg mb-3 mb-lg-0">
                     <label>Distance (Km)</label>
-                    <input v-model="travel.distance" type="number" class="form-control" :disabled="toLocation !== 'Custom'" />
+                    <input v-model="distance" type="number" class="form-control" :disabled="toLocation !== 'Custom'" />
                 </div>
                 <div class="col-12 col-lg-auto align-self-end text-left text-lg-right">
                     <button type="submit" class="btn btn-primary">Calculate</button>
@@ -62,6 +62,7 @@
 
 <script>
 import drivesjson from '../../content/drives.json'
+import distancesjson from '../../content/distances.json'
 import Multiselect from 'vue-multiselect'
 export default {
     name: "travel-form",
@@ -78,17 +79,8 @@ export default {
                 sizes: [],
                 classes: []
             },
-            travel: {
-                locations: ['Custom', 'ArcCorp', 'Port Olisar' ],
-                distance: 42287791
-            },
-            distances: [
-                { 
-                    from: 'Port Olisar',
-                    to: 'ArcCorp',
-                    kilometers: 42287791
-                }
-            ]
+            distance: 42287791,
+            distances: distancesjson
         }
     },
     created() {
@@ -96,7 +88,7 @@ export default {
     },
     methods: {
         handleSearchSubmit() {
-            this.$emit('travel:search', this.travel.distance);
+            this.$emit('travel:search', this.distance);
         },
         getDistinct(value, index, self) {
             return self.indexOf(value) === index;
@@ -109,11 +101,19 @@ export default {
                 if (matchedDistances.length > 0) {
                     return matchedDistances[0].kilometers;
                 }
-                return 0;
             }
+            return 0;
         }
     },
     computed: {
+        travelOptions() {
+            var travelArray = this.distances.map(distance => distance.to)
+                .concat(this.distances.map(distance => distance.from))
+                .filter(this.getDistinct)
+                .sort();
+            travelArray.unshift("Custom");
+            return travelArray;
+        },
         driveNameOptions() {
             return this.drives.map(drive => drive.localname).filter(this.getDistinct);
         },
@@ -132,17 +132,18 @@ export default {
         fromLocation: function(newValue) {
             if (newValue === 'Custom' && this.toLocation !== 'Custom') {
                 this.toLocation = 'Custom';
+            } else {
+                this.distance = this.getDistance(this.toLocation, newValue);
             }
-            else {
-                this.travel.distance = this.getDistance(this.toLocation, newValue);
-            }
+            this.$emit('travel:search', this.distance);
         },
         toLocation: function(newValue) {
             if (newValue === 'Custom' && this.fromLocation !== 'Custom') {
                 this.fromLocation = 'Custom';
             } else {
-                this.travel.distance = this.getDistance(newValue, this.fromLocation);
+                this.distance = this.getDistance(newValue, this.fromLocation);
             }
+            this.$emit('travel:search', this.distance);
         }
     }
 }
