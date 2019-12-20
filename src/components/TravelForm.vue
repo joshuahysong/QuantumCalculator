@@ -61,8 +61,8 @@
 </template>
 
 <script>
-import drivesjson from '../../content/drives.json'
-import distancesjson from '../../content/distances.json'
+import drivesjson from '../../public/assets/json/drives.json'
+import distancesjson from '../../public/assets/json/distances.json'
 import Multiselect from 'vue-multiselect'
 export default {
     name: "travel-form",
