@@ -1,18 +1,23 @@
 [
+    {
+        "from": "CRU-L5",
+        "to": "HUR-L3",
+        "kilometers": 1512800
+    },
+    {
+        "from": "Microtech",
+        "to": "ARC-L5",
+        "kilometers": 72033000
+    },
+    {
+        "from": "Microtech",
+        "to": "HUR-L4",
+        "kilometers": 30596000
+    },
     { 
         "from": "Port Olisar",
         "to": "ArcCorp",
         "kilometers": 42287791
-    },
-    {
-        "from": "Port Olisar",
-        "to": "ARC-L5",
-        "kilometers": 26140000
-    },
-    {
-        "from": "ARC-L5",
-        "to": "Microtech",
-        "kilometers": 72033000
     },
     {
         "from": "Port Olisar",
@@ -21,7 +26,22 @@
     },
     {
         "from": "Port Olisar",
+        "to": "ARC-L5",
+        "kilometers": 26140000
+    },
+    {
+        "from": "Port Olisar",
+        "to": "CRU-L5",
+        "kilometers": 19133000
+    },
+    {
+        "from": "Port Olisar",
         "to": "HUR-L4",
         "kilometers": 28885000
+    },
+    {
+        "from": "Port Olisar",
+        "to": "HUR-L3",
+        "kilometers": 6661000
     }
 ]
