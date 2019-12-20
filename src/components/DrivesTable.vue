@@ -62,7 +62,7 @@ export default {
         }
     },
     created() {
-        axios.get('./assets/json/QuantumDrives')
+        axios.get('https://quantumtravel.regalpudding.com/assets/json/QuantumDrives/')
             .then((res) => {
                 // Surely there's a better way...
                 var trackIndex = 0;
