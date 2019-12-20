@@ -15,7 +15,7 @@
                     <input v-model="distance" type="number" class="form-control" :disabled="toLocation !== 'Custom'" />
                 </div>
                 <div class="col-12 col-lg-auto align-self-end text-left text-lg-right">
-                    <button type="submit" class="btn btn-primary">Calculate</button>
+                    <button type="submit" class="btn btn-primary" :disabled="toLocation !== 'Custom'">Calculate</button>
                 </div>
             </div>
         </form>

@@ -3,7 +3,7 @@
     <div class="container">
         <h1 class="my-5 text-center">Quantum Travel Time Calculator</h1>
         <travel-form @travel:search="calculateTravel" @travel:filter="filterDrives" class="mb-3" />
-        <p class="mb-5 small"><em>Travel times are estimations and may not be 100% accurate to actual travel time in game until the underlying calculations are better understood.</em></p>
+        <p class="mb-5 small text-center"><em>Travel times are estimations and may not be 100% accurate to actual travel time in game until the underlying calculations are better understood.</em></p>
     </div>
     <div class="container-fluid">  
         <drives-table :distance="distance" :filter="filter" />
