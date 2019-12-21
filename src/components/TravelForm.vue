@@ -4,18 +4,18 @@
             <div class="row no-gutters-md mb-3">
                 <div class="col-12 col-md-6 col-lg-4 mb-3 mb-lg-0">
                     <label>From</label>
-                    <multiselect v-model="fromLocation" :options="travelOptions" :searchable="false" placeholder="Pick a starting location"></multiselect>
+                    <multiselect v-model="fromLocation" :options="fromLocationOptions" :searchable="false" placeholder="Pick a starting location"></multiselect>
                 </div>
                 <div class="col-12 col-md-6 col-lg-4 mb-3 mb-lg-0">
                     <label>To</label>
-                    <multiselect v-model="toLocation" :options="travelOptions" :searchable="false" placeholder="Pick an ending location"></multiselect>
+                    <multiselect v-model="toLocation" :options="toLocationOptions" :searchable="false" placeholder="Pick an ending location" :disabled="fromLocation === 'Custom'"></multiselect>
                 </div>
                 <div class="col-12 col-lg mb-3 mb-lg-0">
                     <label>Distance (Km)</label>
-                    <input v-model="distance" type="number" class="form-control" :disabled="toLocation !== 'Custom'" />
+                    <input v-model="distance" type="number" class="form-control" :disabled="fromLocation !== 'Custom'" />
                 </div>
                 <div class="col-12 col-lg-auto align-self-end text-left text-lg-right">
-                    <button type="submit" class="btn btn-primary" :disabled="toLocation !== 'Custom'">Calculate</button>
+                    <button type="submit" class="btn btn-primary" :disabled="fromLocation !== 'Custom'">Calculate</button>
                 </div>
             </div>
         </form>
@@ -76,19 +76,32 @@ export default {
         return {
             drives: drivesjson,
             fromLocation: 'Port Olisar',
-            toLocation: 'ArcCorp',
+            toLocation: 'Microtech',
+            fromLocationOptions: [],
+            toLocationOptions: [],
             filter: {
                 names: [],
                 sizes: [],
                 classes: [],
                 grades: []
             },
-            distance: 42287791,
+            distance: 57469469,
             distances: distancesjson
         }
     },
     created() {
         this.$emit('travel:filter', this.filter);
+        var travelArray = this.distances.map(distance => distance.to)
+            .concat(this.distances.map(distance => distance.from))
+            .filter(this.getDistinct)
+            .sort();
+        travelArray.unshift("Custom");
+        this.fromLocationOptions = travelArray;
+        this.fromLocation = 'Port Olisar';
+        this.setToLocationOptions();
+    },
+    mounted() {
+        this.toLocation = 'Microtech'
     },
     methods: {
         handleSearchSubmit() {
@@ -107,6 +120,23 @@ export default {
                 }
             }
             return 0;
+        },
+        setToLocationOptions() {
+            this.toLocationOptions = this.distances
+                .filter(distance => distance.to === this.fromLocation
+                    || distance.from === this.fromLocation)
+                .map(distance => distance.to)
+                .concat(this.distances
+                .filter(distance => distance.to === this.fromLocation
+                    || distance.from === this.fromLocation)
+                .map(distance => distance.from))
+                .filter(this.getDistinct)
+                .filter(d => d !== this.fromLocation)
+                .sort();
+            
+            if (this.toLocationOptions.length > 0) {
+                this.toLocation = this.toLocationOptions[0];
+            }
         }
     },
     computed: {
@@ -146,7 +176,8 @@ export default {
             if (newValue === 'Custom' && this.toLocation !== 'Custom') {
                 this.toLocation = 'Custom';
             } else {
-                this.distance = this.getDistance(this.toLocation, newValue);
+                this.setToLocationOptions();
+                this.distance = this.getDistance(newValue, this.toLocation);
             }
             this.$emit('travel:search', this.distance);
         },
@@ -154,7 +185,7 @@ export default {
             if (newValue === 'Custom' && this.fromLocation !== 'Custom') {
                 this.fromLocation = 'Custom';
             } else {
-                this.distance = this.getDistance(newValue, this.fromLocation);
+                this.distance = this.getDistance(this.fromLocation, newValue);
             }
             this.$emit('travel:search', this.distance);
         }

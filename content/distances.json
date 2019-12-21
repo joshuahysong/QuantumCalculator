@@ -17,12 +17,22 @@
     { 
         "from": "Port Olisar",
         "to": "ArcCorp",
-        "kilometers": 42287791
+        "kilometers": 42313076
     },
     {
         "from": "Port Olisar",
         "to": "Microtech",
-        "kilometers": 57478000
+        "kilometers": 57469469
+    },
+    {
+        "from": "Port Olisar",
+        "to": "Delamar",
+        "kilometers": 22527150
+    },
+    {
+        "from": "Port Olisar",
+        "to": "Hurston",
+        "kilometers": 31922893
     },
     {
         "from": "Port Olisar",

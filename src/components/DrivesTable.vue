@@ -17,6 +17,7 @@ export default {
             fields: [
                 {
                     key: 'name',
+                    label: 'Drive Name',
                     sortable: true
                 },
                 {
@@ -40,12 +41,7 @@ export default {
                 {
                     key: 'manufacturer',
                     sortable: true
-                },
-                {
-                    key: 'fuelUsage',
-                    label: 'Fuel Usage',
-                    sortable: true
-                },                
+                },               
                 {
                     key: 'stage2Speed',
                     label: 'Speed (m/s)',
@@ -71,8 +67,20 @@ export default {
                     sortByFormatted: true,
                 },
                 {
+                    key: 'fuelUsage',
+                    label: 'Fuel Used',
+                    class: 'text-right',
+                    formatter: (value, key, item) => {
+                        if (value && key === 'fuelUsage') {
+                            return (this.distance / 1000000 * item.fuelUsage).toFixed(2);
+                        }
+                    },
+                    sortable: true,
+                    sortByFormatted: true,
+                }, 
+                {
                     key: 'time',
-                    label: 'Travel Time (Minutes)',
+                    label: 'Travel Time (Minutes) *',
                     class: 'text-right',
                     formatter: (value, key, item) => {
                         if (!value && key === 'time') {

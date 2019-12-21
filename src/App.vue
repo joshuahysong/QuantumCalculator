@@ -3,7 +3,7 @@
     <div class="container-fluid">
         <h1 class="my-5 text-center">Quantum Travel Time Calculator</h1>
         <travel-form @travel:search="calculateTravel" @travel:filter="filterDrives" class="mb-3" />
-        <p class="mb-5 small text-center"><em>Travel times are estimations and may not be 100% accurate to actual travel time in game until the underlying calculations are better understood.</em></p> 
+        <p class="mb-5 small text-center"><em>* Travel times are estimations and may not be 100% accurate to actual travel time in game until the underlying calculations are better understood.</em></p> 
         <drives-table :distance="distance" :filter="filter" />
     </div>
 </div>
@@ -21,7 +21,7 @@ export default {
     },
     data() {
         return {
-            distance: 42287791000, // distance from Olisar to ArcCorp
+            distance: 57469469000, // distance from Olisar to ArcCorp
             filter: {}
         }
     },
