@@ -5,9 +5,7 @@
 </template>
 
 <script>
-import axios from 'axios';
-import drivesjson from '../../public/assets/json/drives.json'
-
+import drivesjson from '../../content/drives.json'
 export default {
     name: 'drives-table',
     props: {
@@ -28,20 +26,26 @@ export default {
                 },
                 {
                     key: 'class',
+                    formatter: (value, key, item) => {
+                        if (value && key === 'class') {
+                            return this.$parent.getVerboseClass(item.class);
+                        }
+                    },
                     sortable: true,
+                    sortByFormatted: true,
                 },
                 {
-                    key: 'fuelUsage',
+                    key: 'qdFuelrequirementqdFuel',
                     label: 'Fuel Usage',
                     sortable: true
                 },                
                 {
-                    key: 'stage2Speed',
+                    key: 'qdSpeedms',
                     label: 'Speed (m/s)',
                     sortable: true
                 },               
                 {
-                    key: 'stage2Acceleration',
+                    key: 'qdAccelstage2ms',
                     label: 'Acceleration (m/s)',
                     sortable: true
                 },
@@ -50,65 +54,19 @@ export default {
                     label: 'Travel Time (Minutes)',
                     formatter: (value, key, item) => {
                         if (!value && key === 'time') {
-                            return new Date(this.calculateTravelTime(item.stage2Speed, item.stage2Acceleration) * 1000).toISOString().substr(14, 5)
+                            return new Date(this.calculateTravelTime(item.qdSpeedms, item.qdAccelstage2ms) * 1000).toISOString().substr(14, 5)
                         }
                     },
                     sortable: true,
                     sortByFormatted: true,
                 }
             ],
-            drivesDb: drivesjson,
-            drives: []
+            drives: drivesjson
         }
     },
     created() {
-        axios.get('./assets/json/QuantumDrives')
-            .then((res) => {
-                // Surely there's a better way...
-                var trackIndex = 0;
-                for (var i = 0; i < res.data.length; i++) {
-                    var driveData = [];
-                    axios.get(`./assets/json/QuantumDrives/${res.data[i]}`)
-                        .then((driveResponse)=> {
-                            if (driveResponse 
-                                && driveResponse.data
-                                && driveResponse.data.Raw
-                                && driveResponse.data.Raw.Entity
-                                && driveResponse.data.Raw.Entity.Components
-                                ) {
-                                var drive = new Object();
-                                var driveName = driveResponse.data.Raw.Entity.Components.SAttachableComponentParams.AttachDef.Localization.Name;
-                                driveName = driveName.replace('_SCItem', '').replace('@item_name_', '').replace('@item_Name_', '').replace('@item_name', '').replace('@item_Name', '')
-
-                                var matchingDriveDb = this.drivesDb.filter(x => x.name === driveName)
-                                if (matchingDriveDb && matchingDriveDb.length > 0) {
-                                    drive.localname = matchingDriveDb[0].localname.substring(matchingDriveDb[0].localname.lastIndexOf('_') + 1);
-                                    drive.class = this.$parent.getVerboseClass(matchingDriveDb[0].class)
-                                } else {
-                                    drive.localname = driveName.substring(driveName.lastIndexOf('_') + 1)
-                                }
-                                drive.size = driveResponse.data.Raw.Entity.Components.SAttachableComponentParams.AttachDef.Size;
-                                drive.fuelUsage = driveResponse.data.Raw.Entity.Components.SCItemQuantumDriveParams.quantumFuelRequirement;
-                                drive.stage2Speed = driveResponse.data.Raw.Entity.Components.SCItemQuantumDriveParams.params.driveSpeed;
-                                drive.stage2Acceleration = driveResponse.data.Raw.Entity.Components.SCItemQuantumDriveParams.params.stageTwoAccelRate;
-
-                                driveData.push(drive);
-                                trackIndex++;
-                                // If we are on the last record finish processing
-                                if (trackIndex === res.data.length) {
-                                    this.drives = driveData;
-                                    // Sort by Size then by Localname both ascending
-                                    this.drives = this.drives.sort((a,b) => a.size > b.size ? 1 : (a.size === b.size) ? ((a.localname > b.localname) ? 1 : -1) : -1);
-                                }
-                            }
-                        })
-                        .catch((driveError) => {
-                            console.log(driveError);
-                        });
-                }
-            }).catch((err) => {
-                console.log(err);
-            });
+        // Sort by Size then by Localname both ascending
+        this.drives = this.drives.sort((a,b) => a.size > b.size ? 1 : (a.size === b.size) ? ((a.localname > b.localname) ? 1 : -1) : -1);
     },
     methods: {
         calculateTravelTime(speed, acceleration) {
