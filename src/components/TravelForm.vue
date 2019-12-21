@@ -1,14 +1,14 @@
 <template>
     <div id="travel-form">
-        <form @submit.prevent="handleSearchSubmit">
+        <form @submit.prevent="handleSearchSubmit" class="container">
             <div class="row no-gutters-md mb-3">
                 <div class="col-12 col-md-6 col-lg-4 mb-3 mb-lg-0">
                     <label>From</label>
-                    <multiselect v-model="fromLocation" :options="travelOptions" :searchable="false" :close-on-select="true" placeholder="Pick a starting location"></multiselect>
+                    <multiselect v-model="fromLocation" :options="travelOptions" :searchable="false" placeholder="Pick a starting location"></multiselect>
                 </div>
                 <div class="col-12 col-md-6 col-lg-4 mb-3 mb-lg-0">
                     <label>To</label>
-                    <multiselect v-model="toLocation" :options="travelOptions" :searchable="false" :close-on-select="true" placeholder="Pick a starting location"></multiselect>
+                    <multiselect v-model="toLocation" :options="travelOptions" :searchable="false" placeholder="Pick an ending location"></multiselect>
                 </div>
                 <div class="col-12 col-lg mb-3 mb-lg-0">
                     <label>Distance (Km)</label>
@@ -25,23 +25,29 @@
             </div>
             <div class='card-body'>
                 <div class="row mb-3">
-                    <div class="col-12 col-lg mb-3 mb-lg-0">
+                    <div class="col-12 col-md-6 col-lg mb-3 mb-lg-0">
                         <label>Name</label>
                         <multiselect v-model="filter.names" 
                             :options="driveNameOptions" 
                             :multiple="true"
-                            :close-on-select="false"
                             :limit="1"
                             placeholder="Select a drive name"></multiselect>
                     </div>
-                    <div class="col-12 col-md-6 col-lg mb-3 mb-md-0">
+                    <div class="col-12 col-md-6 col-lg mb-3 mb-lg-0">
                         <label>Size</label>
                         <multiselect v-model="filter.sizes" 
                             :options="driveSizeOptions" 
                             :multiple="true" 
                             :searchable="false"
-                            :close-on-select="false"
                             placeholder="Select a drive size"></multiselect>
+                    </div>
+                    <div class="col-12 col-md-6 col-lg mb-3 mb-md-0">
+                        <label>Grade</label>
+                        <multiselect v-model="filter.grades" 
+                            :options="driveGradeOptions" 
+                            :multiple="true" 
+                            :searchable="false"
+                            placeholder="Select a drive grade"></multiselect>
                     </div>
                     <div class="col-12 col-md-6 col-lg">
                         <label>Class</label>
@@ -49,9 +55,6 @@
                             :options="driveClassOptions" 
                             :multiple="true" 
                             :searchable="false"
-                            :close-on-select="false"
-                            track-by="key"
-                            label="label"
                             placeholder="Select a drive class"></multiselect>
                     </div>
                 </div>
@@ -77,7 +80,8 @@ export default {
             filter: {
                 names: [],
                 sizes: [],
-                classes: []
+                classes: [],
+                grades: []
             },
             distance: 42287791,
             distances: distancesjson
@@ -115,18 +119,27 @@ export default {
             return travelArray;
         },
         driveNameOptions() {
-            return this.drives.map(drive => drive.localname).filter(this.getDistinct);
+            var names = this.drives.map(drive => drive.name).filter(this.getDistinct);
+            return names.sort();
         },
         driveSizeOptions() {
-            return this.drives.map(drive => drive.size).filter(this.getDistinct);
+            var sizes = this.drives.map(drive => drive.size).filter(this.getDistinct);
+            return sizes.sort();
         },
         driveClassOptions() {
-            return this.drives
+            var classes = this.drives
                 .filter((drive) => drive.class)
                 .map(drive => drive.class)
-                .filter(this.getDistinct)
-                .map(c => { return { "key": c, "label": this.$parent.getVerboseClass(c) } });
-        }
+                .filter(this.getDistinct);
+            return classes.sort();
+        },
+        driveGradeOptions() {
+            var grades = this.drives
+                .filter((drive) => drive.class)
+                .map(drive => drive.grade)
+                .filter(this.getDistinct);
+            return grades.sort();
+        },
     },
     watch: {
         fromLocation: function(newValue) {

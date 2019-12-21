@@ -16,8 +16,7 @@ export default {
         return {
             fields: [
                 {
-                    key: 'localname',
-                    label: 'Name',
+                    key: 'name',
                     sortable: true
                 },
                 {
@@ -35,26 +34,49 @@ export default {
                     sortByFormatted: true,
                 },
                 {
-                    key: 'qdFuelrequirementqdFuel',
+                    key: 'grade',
+                    sortable: true
+                },
+                {
+                    key: 'manufacturer',
+                    sortable: true
+                },
+                {
+                    key: 'fuelUsage',
                     label: 'Fuel Usage',
                     sortable: true
                 },                
                 {
-                    key: 'qdSpeedms',
+                    key: 'stage2Speed',
                     label: 'Speed (m/s)',
-                    sortable: true
+                    class: 'text-right',
+                    formatter: (value, key, item) => {
+                        if (value && key === 'stage2Speed') {
+                            return item.stage2Speed.toLocaleString();
+                        }
+                    },
+                    sortable: true,
+                    sortByFormatted: true,
                 },               
                 {
-                    key: 'qdAccelstage2ms',
+                    key: 'stage2Acceleration',
                     label: 'Acceleration (m/s)',
-                    sortable: true
+                    class: 'text-right',
+                    formatter: (value, key, item) => {
+                        if (value && key === 'stage2Acceleration') {
+                            return item.stage2Acceleration.toLocaleString();
+                        }
+                    },
+                    sortable: true,
+                    sortByFormatted: true,
                 },
                 {
                     key: 'time',
                     label: 'Travel Time (Minutes)',
+                    class: 'text-right',
                     formatter: (value, key, item) => {
                         if (!value && key === 'time') {
-                            return new Date(this.calculateTravelTime(item.qdSpeedms, item.qdAccelstage2ms) * 1000).toISOString().substr(14, 5)
+                            return new Date(this.calculateTravelTime(item.stage2Speed, item.stage2Acceleration) * 1000).toISOString().substr(14, 5)
                         }
                     },
                     sortable: true,
@@ -65,8 +87,8 @@ export default {
         }
     },
     created() {
-        // Sort by Size then by Localname both ascending
-        this.drives = this.drives.sort((a,b) => a.size > b.size ? 1 : (a.size === b.size) ? ((a.localname > b.localname) ? 1 : -1) : -1);
+        // Sort by size then by name both ascending
+        this.drives = this.drives.sort((a,b) => a.size > b.size ? 1 : (a.size === b.size) ? ((a.name > b.name) ? 1 : -1) : -1);
     },
     methods: {
         calculateTravelTime(speed, acceleration) {
@@ -85,13 +107,16 @@ export default {
             var filteredData = this.drives;
             if (this.filter && Object.entries(this.filter).length > 0) {   
                 if (this.filter.names.length > 0) {
-                    filteredData = filteredData.filter((drive) => this.filter.names.includes(drive.localname));
+                    filteredData = filteredData.filter((drive) => this.filter.names.includes(drive.name));
                 }
                 if (this.filter.sizes.length > 0) {
                     filteredData = filteredData.filter((drive) => this.filter.sizes.includes(drive.size));
                 }
                 if (this.filter.classes.length > 0) {
-                    filteredData = filteredData.filter((drive) => this.filter.classes.map(c => c.key).includes(drive.class));
+                    filteredData = filteredData.filter((drive) => this.filter.classes.includes(drive.class));
+                }
+                if (this.filter.grades.length > 0) {
+                    filteredData = filteredData.filter((drive) => this.filter.grades.includes(drive.grade));
                 }
             }
             return filteredData;
