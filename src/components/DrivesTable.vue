@@ -1,6 +1,6 @@
 <template>
     <div id='drives-table'>
-        <b-table striped hover dark :items="filteredDrives" :fields="fields" responsive="md"></b-table>
+        <b-table small striped hover dark :items="filteredDrives" :fields="fields" responsive="lg"></b-table>
     </div>
 </template>
 

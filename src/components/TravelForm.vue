@@ -12,14 +12,15 @@
                 </div>
                 <div class="col-12 col-lg mb-3 mb-lg-0">
                     <label>Distance (Km)</label>
-                    <input v-model="distance" type="number" class="form-control" :disabled="fromLocation !== 'Custom'" />
-                </div>
-                <div class="col-12 col-lg-auto align-self-end text-left text-lg-right">
-                    <button type="submit" class="btn btn-primary" :disabled="fromLocation !== 'Custom'">Calculate</button>
+                    <div class="input-group">
+                        <input v-model="distance" type="number" class="form-control" :disabled="fromLocation !== 'Custom'" placeholder="Enter custom distance" aria-label="Custom Distance" aria-describedby="calculate-travel">
+                        <div class="input-group-append">
+                            <button class="btn btn-warning" type="submit" id="calculate-travel" :disabled="fromLocation !== 'Custom'">></button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </form>
-        <p class="small text-center"><em>* Travel times are estimations and may not be 100% accurate to actual travel time in game until the underlying calculations are better understood.</em></p> 
         <div class='card text-white bg-dark'>
             <div class='card-header'>
                 Filters
