@@ -1,6 +1,7 @@
 <template>
     <div id='drives-table'>
-        <b-table small striped hover dark :items="filteredDrives" :fields="fields" responsive="lg"></b-table>
+        <b-table small striped hover dark :items="filteredDrives" :fields="fields" responsive="lg"></b-table> 
+        <p class="small text-center"><em>* Travel times are estimations and may not be 100% accurate to actual travel time in game until the underlying calculations are better understood.</em></p>
     </div>
 </template>
 
@@ -18,7 +19,8 @@ export default {
                 {
                     key: 'name',
                     label: 'Drive Name',
-                    sortable: true
+                    sortable: true,
+                    stickyColumn: true
                 },
                 {
                     key: 'size',
@@ -105,7 +107,7 @@ export default {
             if (this.distance < accelerationDistance) {
                 travelTime = 4 * Math.sqrt(this.distance / (2 * acceleration));
             } else {
-                travelTime = speed / acceleration + this.distance / speed;
+                travelTime = 2 * (speed / acceleration) + this.distance / speed;
             }
             return travelTime;
         }
