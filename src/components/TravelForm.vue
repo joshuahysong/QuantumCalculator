@@ -19,7 +19,8 @@
                 </div>
             </div>
         </form>
-        <div class='card'>
+        <p class="small text-center"><em>* Travel times are estimations and may not be 100% accurate to actual travel time in game until the underlying calculations are better understood.</em></p> 
+        <div class='card text-white bg-dark'>
             <div class='card-header'>
                 Filters
             </div>

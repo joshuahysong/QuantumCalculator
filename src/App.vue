@@ -1,9 +1,9 @@
 <template>
 <div id="app">
     <div class="container-fluid">
-        <h1 class="my-5 text-center">Quantum Travel Time Calculator</h1>
+        <h1 class="mt-4 text-center text-warning">Quantum Travel Time Calculator</h1>
+        <p class="small text-center">Data: 3.8.0-LIVE.3917223</p>
         <travel-form @travel:search="calculateTravel" @travel:filter="filterDrives" class="mb-3" />
-        <p class="mb-5 small text-center"><em>* Travel times are estimations and may not be 100% accurate to actual travel time in game until the underlying calculations are better understood.</em></p> 
         <drives-table :distance="distance" :filter="filter" />
     </div>
 </div>
@@ -56,5 +56,8 @@ export default {
     font-family: 'Avenir', Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+}
+.theme-header {
+    color: #FF9700
 }
 </style>
