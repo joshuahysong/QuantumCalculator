@@ -8,7 +8,7 @@ Current build data: Patch 3.8.0-LIVE.3917223
 
 ## Build Setup
 
-### dependencies:
+### Dependencies
 npm install
 
 ### Start a local server at http://locahost:8080
