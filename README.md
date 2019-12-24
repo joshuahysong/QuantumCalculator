@@ -1,6 +1,6 @@
 # QuantumCalculator
 
-Tool to compare quantum travel times between Quantum Drives between various locations in Star Citizen
+Tool to compare quantum travel times for Quantum Drives between various locations in Star Citizen
 
 Published here: https://quantumtravel.regalpudding.com/
 
