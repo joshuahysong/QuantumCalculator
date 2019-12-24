@@ -57,7 +57,7 @@ export default {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
-.theme-header {
-    color: #FF9700
+.multiselect--active {
+  z-index: 10;
 }
 </style>

@@ -1,7 +1,12 @@
 <template>
     <div id='drives-table'>
         <b-table small striped hover dark :items="filteredDrives" :fields="fields" responsive="lg"></b-table> 
-        <p class="small text-center"><em>* Travel times are estimations and may not be 100% accurate to actual travel time in game until the underlying calculations are better understood.</em></p>
+        <p class="small text-center">
+            <em>* Travel times are calculated using a linear calculation of the phase 2 acceleration up to the phase 2 speed with deceleration added. 
+                Actual in game tests show the acceleration of drives can very greatly from this acceleration value resulting in longer than expected travel times. 
+                Results should be within a minute-ish of actual in game times. This is especially true of size 1 drives.
+            </em>
+        </p>
     </div>
 </template>
 
