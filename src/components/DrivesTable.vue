@@ -20,6 +20,7 @@ export default {
     },
     data() {
         return {
+            modifier: 0.38,
             fields: [
                 {
                     key: 'name',
@@ -110,9 +111,11 @@ export default {
             var accelerationDistance = Math.pow(speed, 2) / (2 * acceleration);
             var travelTime = 0;
             if (this.distance < accelerationDistance) {
+                acceleration = acceleration * this.modifier;
                 travelTime = 4 * Math.sqrt(this.distance / (2 * acceleration));
             } else {
-                travelTime = 2 * (speed / acceleration) + this.distance / speed;
+                acceleration = acceleration * this.modifier;
+                travelTime = 0.5 * (2 * (speed / acceleration)) + this.distance / speed;
             }
             return travelTime;
         }
